@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_health_help_form" model="ir.ui.view">
+        <field name="name">health.help.form</field>
+        <field name="model">health.help</field>
+        <field name="arch" type="xml">
+            <form string="Job">
+                <header>
+                   <button name="action_to_approve" states="draft"
+                            string="To Approve"
+                            class="btn-primary" type="object"/>
+                   <button name="action_disapproved" states="to_approve"
+                            string="Disapproved"
+                            class="btn-primary" type="object"/>
+                   <button name="action_approved"
+                            string="Approved" states="to_approve"
+                            class="btn-primary" type="object"/>
+                   <field name="state" widget="statusbar"/>
+               </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="type"/>
+                            <field name="to_be_followed"/>
+                        </group>
+                        <group>
+                            <field name="caretaker_id"/>
+                            <field name="for_orphan"/>
+                            <field name="orphan_id"/>
+                            <field name="related_state"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="doctor"/>
+                            <field name="type_of_price"/>
+                            <field name="aide_origin" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="type"/>
+                            <field name="type_of_help"/>
+                            <field name="number"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_health_help_tree" model="ir.ui.view">
+        <field name="name">health.help.tree</field>
+        <field name="model">health.help</field>
+        <field name="arch" type="xml">
+            <tree string="Job">
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="caretaker_id"/>
+                <field name="doctor"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="health_help_report_view_pivot" model="ir.ui.view">
+        <field name="name">health.help.report.pivot</field>
+        <field name="model">health.help</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Health help Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="caretaker_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="health_help_report_view_graph" model="ir.ui.view">
+        <field name="name">health.help.report.graph</field>
+        <field name="model">health.help</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="Health help Analysis" sample="1">
+                <field name="date" interval="months" type="col"/>
+                <field name="amount" operator="+" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_health_help" model="ir.actions.act_window">
+        <field name="name">Health Help</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">health.help</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem  id="menu_physical" parent="menu_aide" name="Health Help"  sequence="20" />
+
+    <menuitem  id="menu_manage_health_help"     name="physical Health Help"  parent="menu_physical"   action="action_health_help" sequence="20" />
+
+    <record id="view_health_mental_help_form" model="ir.ui.view">
+        <field name="name">health.mental.help.form</field>
+        <field name="model">health.mental.help</field>
+        <field name="arch" type="xml">
+            <form string="Healt help">
+                <header>
+                   <button name="action_to_approve" states="draft"
+                            string="To Approve"
+                            class="btn-primary" type="object"/>
+                   <button name="action_disapproved" states="to_approve"
+                            string="Disapproved"
+                            class="btn-primary" type="object"/>
+                   <button name="action_approved"
+                            string="Approved" states="to_approve"
+                            class="btn-primary" type="object"/>
+                   <field name="state" widget="statusbar"/>
+               </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="related_moral_state"/>
+                            <field name="to_be_followed"/>
+                        </group>
+                        <group>
+                            <field name="caretaker_id"/>
+                            <field name="for_orphan"/>
+                            <field name="orphan_id"/>
+                            <field name="related_moral_state"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="doctor"/>
+                            <field name="type_of_price"/>
+                            <field name="aide_origin" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="type"/>
+                            <field name="number"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_health_mental_help_tree" model="ir.ui.view">
+        <field name="name">health.mental.help.tree</field>
+        <field name="model">health.mental.help</field>
+        <field name="arch" type="xml">
+            <tree string="Job">
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="caretaker_id"/>
+                <field name="doctor"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="health_mental_help_report_view_pivot" model="ir.ui.view">
+        <field name="name">health.mental.help.report.pivot</field>
+        <field name="model">health.mental.help</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Mental help Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="caretaker_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="health_mental_help_report_view_graph" model="ir.ui.view">
+        <field name="name">health.mental.help.report.graph</field>
+        <field name="model">health.mental.help</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="Mental help Analysis" sample="1">
+                <field name="date" interval="months" type="col"/>
+                <field name="amount" operator="+" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_health_mental_help" model="ir.actions.act_window">
+        <field name="name">Health Help</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">health.mental.help</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem  id="menu_manage_mental_health_help"     name="Mental Health Help"  parent="menu_physical"   action="action_health_mental_help" sequence="20" />
+
+    <record id="view_doctors_clinics_form" model="ir.ui.view">
+        <field name="name">res.doctor.form</field>
+        <field name="model">res.doctor</field>
+        <field name="arch" type="xml">
+            <form string="Doctors / clinics">
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="street" placeholder="Street..." class="o_address_street"/>
+                            <field name="street2" placeholder="Street2..." class="o_address_street"/>
+                            <field name="city" placeholder="City" class="o_address_city"/>
+                            <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" />
+                            <field name="country" placeholder="Country" class="o_address_country"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="speciality"/>
+                            <field name="type_of_payment"/>
+                        </group>
+                    </group>
+                    <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_doctors_clinics_tree" model="ir.ui.view">
+        <field name="name">res.doctor.tree</field>
+        <field name="model">res.doctor</field>
+        <field name="arch" type="xml">
+            <tree string="Doctors / clinics" >
+                <field name="name"/>
+                <field name="speciality"/>
+                <field name="phone"/>
+                <field name="type_of_payment"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_doctors_clinics" model="ir.actions.act_window">
+        <field name="name">Doctors / clinics</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.doctor</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem  id="manage_doctor_clinic"     name="Doctors / clinics"  parent="menu_aide_configuration"   action="action_doctors_clinics" sequence="20" />
+
+    <!--  configuration -->
+
+        <record id="view_type_health_help_tree" model="ir.ui.view">
+        <field name="name">type.health.help.tree</field>
+        <field name="model">type.health.help</field>
+        <field name="arch" type="xml">
+            <tree string="Type of Medical Help" editable="bottom">
+                <field name="name"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_type_health_help" model="ir.actions.act_window">
+        <field name="name">Type of Medical Help</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">type.health.help</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <menuitem  id="menu_type_health_help"     name="Type of medical Help"  parent="menu_aide_configuration"   action="action_type_health_help" sequence="40" />
+
+</odoo>

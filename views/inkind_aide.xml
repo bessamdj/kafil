@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_aide_inkind_form" model="ir.ui.view">
+        <field name="name">aide.in_kind.form</field>
+        <field name="model">aide.in_kind</field>
+        <field name="arch" type="xml">
+            <form string="Job">
+               <header>
+                   <button name="action_to_approve" states="draft"
+                            string="To Approve"
+                            class="btn-primary" type="object"/>
+                   <button name="action_disapproved" states="to_approve"
+                            string="Disapproved"
+                            class="btn-primary" type="object"/>
+                   <button name="action_approved"
+                            string="Approved" states="to_approve"
+                            class="btn-primary" type="object"/>
+                   <button name="action_delivered" states="approved"
+                            string="Confirm Delivery"
+                            class="btn-primary" type="object"/>
+                   <field name="state" widget="statusbar"/>
+               </header>
+               <sheet>
+                    <div class="oe_button_box">
+                        <!--
+                        <button name="action_view_delivery" string="Delivery" type="object" class="oe_stat_button"
+                        attrs="{'invisible':[('state','!=','delivered')]}" icon="fa-pencil-square-o">
+                        </button>
+                        -->
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="caretaker"/>
+                        </group>
+                        <group>
+                            <field name="aide_origin" options="{'no_create': True}"/>
+                            <field name="total_amount" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Aide Lines">
+                            <field name="aide_line" mode="tree,kanban">
+                                <tree  editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="product_value" />
+                                    <field name="amount_value" invisible="1"/>
+                                    <field name="aide_id" invisible="1"/>
+                                    </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_aide_inkind_tree" model="ir.ui.view">
+        <field name="name">aide.in_kind.tree</field>
+        <field name="model">aide.in_kind</field>
+        <field name="arch" type="xml">
+            <tree string="Job">
+                <field name="ref"/>
+                <field name="state"/>
+                <field name="date"/>
+                <field name="caretaker"/>
+                <field name="aide_origin" options="{'no_create': True}"/>
+                <field name="total_amount" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="aide_in_kind_report_view_pivot" model="ir.ui.view">
+        <field name="name">aide.in_kind.report.pivot</field>
+        <field name="model">aide.in_kind</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="In-Kind Aide Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="caretaker" type="row"/>
+                <field name="state" type="col"/>
+                <!-- <field name="total_amount" type="measure"/>  -->
+            </pivot>
+        </field>
+    </record>
+
+    <record id="aide_in_kind_report_view_graph" model="ir.ui.view">
+        <field name="name">aide.in_kind.report.graph</field>
+        <field name="model">aide.in_kind</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="In-Kind Aide Analysis" sample="1">
+                <field name="date" interval="months" type="col"/>
+                <!-- <field name="total_amount" operator="+" type="measure"/>  -->
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_aide_inkind" model="ir.actions.act_window">
+        <field name="name">In-Kind Aide</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.in_kind</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem  id="menu_manage_aide_inkind" name="In-Kind Aide" parent="menu_aide_distribution"
+               action="action_aide_inkind" sequence="20" />
+
+    <!--
+    <menuitem  id="menu_manage_aide_clothes" name="Clothes" parent="menu_aide_distribution"
+               action="action_aide_inkind" sequence="25" />
+
+    <menuitem  id="menu_manage_aide_el_aid" name="El-Aid Clothes" parent="menu_aide_distribution"
+               action="action_aide_inkind" sequence="25" />
+    -->
+
+    <menuitem  id="menu_in_kind_Transfer" name="In Kind Transfert" parent="menu_aide_transfer"
+               action="action_aide_inkind" sequence="20" />
+
+    <record id="view_type_of_in_kind_tree" model="ir.ui.view">
+        <field name="name">type.in_kind.tree</field>
+        <field name="model">type.in_kind</field>
+        <field name="arch" type="xml">
+            <tree string="Type of in kind" editable="top">
+                <field name="name"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_type_of_in_kind" model="ir.actions.act_window">
+        <field name="name">Type of in kind</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">type.in_kind</field>
+        <field name="context">{}</field>
+
+    </record>
+
+    <menuitem  id="menu_type_of_in_kind" name="Type of in kind" parent="menu_aide_configuration"
+               action="action_type_of_in_kind" sequence="40" />
+
+
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_money_box_form" model="ir.ui.view">
+        <field name="name">money.box.form</field>
+        <field name="model">money.box</field>
+        <field name="arch" type="xml">
+            <form string="Job">
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="total"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="presente" mode="tree">
+                        <tree>
+                            <field name="name"/>
+                            <field name="function"/>
+
+                        </tree>
+                        </field>
+                    </group>
+                    <notebook>
+                        <page>
+                            <field name="amount_line">
+                                <tree string="Amount" editable="bottom">
+                                    <field name="designation"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_money_box_tree" model="ir.ui.view">
+        <field name="name">money.box.tree</field>
+        <field name="model">money.box</field>
+        <field name="arch" type="xml">
+            <tree string="Money Box">
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="presente"/>
+                <field name="total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_money_box" model="ir.actions.act_window">
+        <field name="name">Money Box</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">money.box</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- <menuitem id="money_management" name="Direct donation report" parent="menu_aide_reception" sequence="20" /> -->
+    <menuitem id="money_box_management" name="Donation box report" parent="menu_aide_reception" action="action_money_box" sequence="15"/>
+    <menuitem id="bank_management" name="Bank account management" parent="menu_aide_reception" action="action_money_box" sequence="20"/>
+
+</odoo>

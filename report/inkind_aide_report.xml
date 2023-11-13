@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  In kind aide  -->
+    <report
+            id="report_aide_in_kind_link"
+            string="In kind aide"
+            model="aide.in_kind"
+            report_type="qweb-pdf"
+            name="kafil.report_aide_in_kind"
+            file="kafil.report_aide_in_kind"
+            paperformat="kafil.a5"
+            print_report_name="'In kind aide'"
+    />
+
+
+    <template id="report_aide_in_kind">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                        <t t-if="o and 'company_id' in o">
+                            <t t-set="company" t-value="o.company_id"/>
+                        </t>
+                        <t t-if="not o or not 'company_id' in o">
+                            <t t-set="company" t-value="res_company"/>
+                        </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_aide_in_kind_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_aide_in_kind_doc">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <div class="page" >
+                    <br/>
+                    <h2 style="font: italic bold 24px Arial; text-align:center">
+                        <span>In Kind Aide Ref:</span><span t-field="o.ref"/>At:<span t-field="o.date"/>
+
+                    </h2>
+
+                    <br/><br/>
+                    <div id="informations" class="row mt32 mb32" style="font: italic bold 18px Arial; line-height: 1.8em;">
+                        Name : <span t-field="o.caretaker"/>
+                        <br/>
+                        <t t-if="o.total_amount">
+                            For the amount of <span t-field="o.total_amount"/> <t t-if="o.total_amount"></t>
+                            <br/>
+                        </t>
+
+                    </div>
+                    <div t-foreach="o.aide_line" t-as="al">
+                        <t>Designation:</t>
+                        <t>
+                            <span t-field="al.product_id"/>
+                        </t>
+                        <t>Quantity:</t>
+                        <t>
+                            <span t-field="al.quantity"/>
+                        </t>
+                  </div>
+                </div>
+                <div class="footer">
+                    <span style="text-align:center;">
+                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.ref, 600, 100)"
+                             style="width:350px;height:60px;"/>
+                    </span>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

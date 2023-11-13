@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_kafil_assist_tree" model="ir.ui.view">
+        <field name="name">kafil.assist.tree</field>
+        <field name="model">kafil.assist</field>
+        <field name="arch" type="xml">
+            <tree string="Orphan">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_kafil_assist_form" model="ir.ui.view">
+        <field name="name">kafil.assist.form</field>
+        <field name="model">kafil.assist</field>
+        <field name="arch" type="xml">
+            <form string="Job">
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="order"/></h1>
+                    </div>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_kafil_assist" model="ir.actions.act_window">
+        <field name="name">Reception</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">kafil.assist</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your First Patient !
+            </p>
+        </field>
+    </record>
+
+    <record id="view_kafil_caretaker_tree" model="ir.ui.view">
+        <field name="name">kafil.caretaker.tree</field>
+        <field name="model">kafil.caretaker</field>
+        <field name="arch" type="xml">
+            <tree string="Orphan">
+                <field name="name"/>
+                <field name="age"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_kafil_caretaker_form" model="ir.ui.view">
+        <field name="name">kafil.caretaker.form</field>
+        <field name="model">kafil.caretaker</field>
+        <field name="arch" type="xml">
+            <form string="CareTaker">
+                <header>
+                    <button name="action_to_review" states="draft,suspended,not_accepted" string="To Approve" class="btn-primary" type="object"/>
+                    <button name="action_accepted" states="to_review" string="Accepted" class="btn-primary" type="object"/>
+                    <button name="action_not_accepted" states="to_review" string="Not Accepted" type="object"/>
+                    <button name="action_suspended" states="accepted" string="Suspend" class="btn-primary" type="object"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+
+                        <button
+                            class="oe_stat_button"
+                            name="open_map"
+                            type="object"
+                            string="Map"
+                            attrs="{'invisible': [('city', '=', False)]}"
+                            icon="fa-map-marker"
+                        />
+                        <button
+                            class="oe_stat_button"
+                            name="open_route_map"
+                            type="object"
+                            string="Route Map"
+                            attrs="{'invisible': [('city', '!=', 'xx')]}"
+                            icon="fa-car"
+                        />
+
+                        <button class="oe_stat_button" type="object" name="get_financials"
+                                icon="fa-usd">
+                            <field string="Financial help" name="financial_help_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="get_purchase_help"
+                                icon="fa-usd">
+                            <field string="Purchases" name="purchase_help_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="get_services"
+                                icon="fa-usd">
+                            <field string="Services" name="service_help_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="get_in_kinds"
+                                icon="fa-pencil-square-o">
+                            <field string="In Kinds" name="in_kind_help_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="get_healths"
+                                icon="fa-usd">
+                            <field string="Health help" name="health_help_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="get_mentals"
+                                icon="fa-usd">
+                            <field string="Mental Help" name="mental_help_count" widget="statinfo"/>
+                        </button>                    </div>
+                    <div class="oe_button_box" name="button_box"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="CareTaker Name"/></h1>
+                    </div>
+
+                    <field name="active" widget="boolean_toggle" invisible="1"/>
+                    <group>
+                    <group>
+                        <field name="ref"/>
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                        <field name="city" placeholder="City" class="o_address_city"/>
+                        <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" />
+                        <field name="zip"/>
+                        <field name="country_id"/>
+                        <field name="widow"/>
+                        <field name="relation" attrs="{'invisible':[('widow','=',True)]}" placeholder="Grand Mother..." />
+                        <field name="date_birth"/>
+                        <field name="age"/>
+                        <field name="worked"/>
+                        <field name="profession" attrs="{'invisible':[('worked','not in',('now'))]}"/>
+                        <field name="speciality" widget="many2many_tags" attrs="{'invisible':[('worked','in',('now','before','no'))]}" />
+                        <field name="salary" attrs="{'invisible':[('worked','not in',('now'))]}"/>
+                        <field name="work_type" attrs="{'invisible':[('worked','not in',('now'))]}"/>
+                        <field name="chiffa_card" attrs="{'invisible':[('worked','not in',('now'))]}"/>
+                        <field name="experience" attrs="{'invisible':[('worked','not in',('now'))]}"/>
+                        <field name="insurance" attrs="{'invisible':[('worked','not in',('now'))]}"/>
+                        <field name="date_closing"/>
+                    </group>
+                    <group>
+                        <field name="phone"/>
+                        <field name="whatsapp"/>
+                        <field name="email"/>
+                        <field name="place_work" attrs="{'invisible':[('worked','not in',('now'))]}"/>
+                        <field name="under_responsibility"/>
+                        <field name="responsibility_detail"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" />
+                    </group>
+                    </group>
+                    <notebook>
+                        <page string="Orphans Info">
+                           <field name="orphan_ids" context="{}">
+                               <tree>
+                                   <field name="name" style="width:330px !important;" />
+                                   <field name="date_birth" style="width: 200px" />
+                                   <field name="age"/>
+                                   <field name="gender"/>
+                               </tree>
+                               <form>
+                                    <field name="image" widget="image" class="oe_avatar"/>
+                                    <div class="oe_title">
+                                        <label for="name" class="oe_edit_only"/>
+                                        <h1><field name="name" placeholder="Orphan Name"/></h1>
+                                    </div>
+                                    <group>
+                                        <group>
+                                            <field name="date_birth"/>
+                                            <field name="age"/>
+                                        </group>
+                                        <group>
+                                            <field name="gender"/>
+                                        </group>
+                                    </group>
+                               </form>
+                               <!--
+                               <kanban class="o_kanban_mobile">
+                                    <field name="name"/>
+                                    <field name="age"/>
+                                    <field name="gender"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                                <div t-attf-class="oe_kanban_card oe_kanban_global_click
+                                                {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                                    <t t-if="!record.display_type.raw_value">
+                                                        <div class="row">
+                                                            <div class="col-2">
+                                                                <img t-att-src="kanban_image(record.image.raw_value)" t-att-title="record.name.value" t-att-alt="record.name.value" style="max-width: 100%;"/>
+                                                            </div>
+                                                            <div class="col-10">
+                                                                <strong>
+                                                                    <span>
+                                                                        <t t-esc="record.name.value"/>
+                                                                    </span>
+                                                                </strong>
+
+                                                                <div class="text-muted">
+                                                                    Age:
+                                                                    <t t-esc="record.price_unit.value"/>
+                                                                </div>
+                                                                <strong>
+                                                                    <span class="float-right text-right">
+                                                                        Gender:
+                                                                        <t t-esc="record.gender.value"/>
+                                                                    </span>
+                                                                </strong>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                    </templates>
+                               </kanban>
+                               -->
+                           </field>
+                        </page>
+                        <page string="Decised Father">
+                            <group>
+                                <group>
+                                    <field name="name_f"/>
+                                    <field name="surname"/>
+                                    <field name="date_death"/>
+                                    <field name="reason_death"/>
+                                    <field name="amount_reason"/>
+                                    <field name="unemployed"/>
+                                </group>
+                                <group>
+                                    <field name="unemp_reason"/>
+                                    <field name="profession_f" context="{'default_for_man': True}"/>
+                                    <field name="pension"/>
+                                    <field name="estate"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string ="Home">
+                            <group>
+                                <group>
+                                    <field name="type_home"/>
+                                    <field name="home_with"/>
+                                    <field name="home_ownership"/>
+                                    <field name="home_basic" widget="many2many_tags"/>
+                                </group>
+                                <group>
+                                    <field name="room_count"/>
+                                    <field name="home_state"/>
+                                    <field name="amount_rental" attrs="{'invisible':[('home_ownership','!=','rental')]}"/>
+                                    <field name="home_deficiency" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Education">
+                            <field name="education" mode="tree,kanban">
+                                <tree string="Field Mappings" editable="bottom">
+                                    <field name="type"/>
+                                    <field name="academic" attrs="{'invisible':[('type','!=','academic')]}"/>
+                                    <field name="degree" attrs="{'invisible':[('type','!=','academic')]}"/>
+                                    <field name="professional" attrs="{'invisible':[('type','!=','pro')]}"/>
+                                    <field name="speciality"  attrs="{'invisible':[('type','!=','pro')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Physical Health">
+                            <field name="physical_h" mode="tree,kanban">
+                                <tree string="Physical" editable="bottom">
+                                    <field name="date"/>
+                                    <field name="good"/>
+                                    <field name="category"/>
+                                    <field name="type"  attrs="{'invisible': [('good', '=', 'good')]}" context="{'default_type': 'other'}"/>
+                                    <field name="follow"/>
+                                    <field name="medic_needs"  attrs="{'invisible': [('good', '=', 'good')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                         <page string="Mental Health">
+                            <field name="mental_h" mode="tree,kanban">
+                                <tree string="Mental" editable="bottom">
+                                    <field name="date"/>
+                                    <field name="is_good"/>
+                                    <field name="disorder" attrs="{'invisible': [('is_good', 'not in',('bad', 'issues'))]}"/>
+                                    <field name="reason" attrs="{'invisible': [('is_good', 'not in',('bad', 'issues'))]}"/>
+                                    <field name="mood" attrs="{'invisible': [('is_good', 'not in',('bad', 'issues'))]}"/>
+                                    <field name="follow"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Geolocation" name="geo_location">
+                        <!-- something to do here -->
+                        <group colspan="2" col="2">
+                            <separator string="Geolocation" colspan="2"/>
+                            <button
+                                string="Geolocate"
+                                name="geo_localize"
+                                colspan="2"
+                                icon="fa-check"
+                                type="object"/>
+                            <div>
+                                <span class="oe_inline"> ( On  </span>
+                                <field name="date_localization" nolabel="1" class="oe_inline"/>
+                                <span> : Lat : </span>
+                                <field name="partner_latitude" nolabel="1" class="oe_inline"/>
+                                <span> ;  Long:  </span>
+                                <field name="partner_longitude" nolabel="1" class="oe_inline"/>
+                                <span>) </span>
+                            </div>
+                        </group>
+                    </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="kafil_caretaker_report_view_pivot" model="ir.ui.view">
+        <field name="name">kafil.caretaker.report.pivot</field>
+        <field name="model">kafil.caretaker</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="CareTaker Analysis" sample="1">
+                <field name="date" type="col"/>
+                <field name="state" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="kafil_caretaker_report_view_graph" model="ir.ui.view">
+        <field name="name">kafil.caretaker.report.graph</field>
+        <field name="model">kafil.caretaker</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <pivot string="CareTaker Analysis" sample="1">
+                <field name="date" interval="months" type="col"/>
+                <field name="state" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_kafil_caretaker" model="ir.actions.act_window">
+        <field name="name">CareTaker</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">kafil.caretaker</field>
+        <field name="view_mode">tree,pivot,graph,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your First Orphan !
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="CareTaker and Orphan" id="menu_assist" sequence="10" web_icon="kafil,static/description/icon4.png"/>
+
+    <menuitem name="Care Taker" id="menu_care_taker" parent="menu_assist"   action="action_kafil_caretaker" sequence="10" />
+
+</odoo>

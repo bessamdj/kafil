@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_reception_money_form" model="ir.ui.view">
+        <field name="name">aide.reception.money.form</field>
+        <field name="model">aide.reception.money</field>
+        <field name="arch" type="xml">
+            <form string="Money Reception">
+                <header>
+                    <button name="action_received" states="draft"
+                            string="Validation"
+                            class="btn-primary" type="object"/>
+                        <!--<button name="create_payment"
+                            string="Payment"
+                            class="btn-primary" type="object"/> -->
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref" attrs="{'invisible':[('state','in', ('draft'))]}"/> </h1>
+                    </div>
+                    <group>
+                    <group>
+                        <field name="is_company" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="donor" domain="[('is_company', '=', is_company)]" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="street" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="street2" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="city" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="state_id" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="country_id" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                    </group>
+                    <group>
+                        <field name="date" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="type" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="amount" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="designation" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="number" attrs="{'invisible': [('type', '=', 'cash')],'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="specific_family" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                    </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_reception_money_tree" model="ir.ui.view">
+        <field name="name">aide.reception.money.tree</field>
+        <field name="model">aide.reception.money</field>
+        <field name="arch" type="xml">
+            <tree string="Donation">
+                    <field name="ref"/>
+                    <field name="donor"/>
+                    <field name="date"/>
+                    <field name="amount"/>
+                    <field name="specific_family"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="aide_reception_money_report_view_pivot" model="ir.ui.view">
+        <field name="name">aide.reception.money.report.pivot</field>
+        <field name="model">aide.reception.money</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Donation Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="aide_reception_money_report_view_graph" model="ir.ui.view">
+        <field name="name">aide.reception.money.report.graph</field>
+        <field name="model">aide.reception.money</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="Donation Analysis" sample="1">
+                <field name="date" interval="months" type="col"/>
+                <field name="amount" operator="+" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_reception_money" model="ir.actions.act_window">
+        <field name="name">Reception Donation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.reception.money</field>
+        <field name="context">{'default_is_company': True}</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+    </record>
+
+    <menuitem name="Aide" id="menu_aide" sequence="15" web_icon="kafil,static/description/icon.png"/>
+
+    <menuitem name="Aide Reception" id="menu_aide_reception" parent="menu_aide" sequence="15" />
+
+    <menuitem  id="menu_manage_reception_money"     name="Money from donors"
+               parent="menu_aide_reception"   action="action_reception_money" sequence="20" />
+
+    <!--
+    <record id="action_reception_money_person" model="ir.actions.act_window">
+        <field name="name">Reception Money From Persons</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.reception.money</field>
+        <field name="domain">[]</field>
+        <field name="context">{'default_is_company': False}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem  id="menu_manage_reception_money_person" name="Money Reception From Persons" parent="menu_aide_reception"
+               action="action_reception_money_person" sequence="19" />
+    -->
+
+    <record id="view_aide_money_form" model="ir.ui.view">
+        <field name="name">aide.money.form</field>
+        <field name="model">aide.money</field>
+        <field name="arch" type="xml">
+            <form string="Job">
+                <header>
+                    <button name="action_to_approve" states="draft"
+                            string="To Approve"
+                            class="btn-primary" type="object"/>
+
+                   <button name="action_disapproved" states="to_approve"
+                            string="Disapproved"
+                            class="btn-primary" type="object"/>
+
+                   <button name="action_approved"
+                            string="Approved" states="to_approve"
+                            class="btn-primary" type="object"/>
+
+                   <button name="action_delivered" states="approved"
+                            string="Confirm Delivery"
+                            class="btn-primary" type="object"/>
+
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="designation"/>
+                            <field name="caretaker"/>
+                            <field name="street"/>
+                            <field name="street2"/>
+                            <field name="city"/>
+                            <field name="state_id"/>
+                            <field name="country_id"/>
+                        </group>
+                        <group>
+                            <field name="type"/>
+                            <field name="number" attrs="{'invisible': [('type', '=', 'cash')]}"/>
+                            <field name="amount"/>
+                            <field name="aide_origin" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_aide_money_tree" model="ir.ui.view">
+        <field name="name">aide.money.tree</field>
+        <field name="model">aide.money</field>
+        <field name="arch" type="xml">
+            <tree string="Donation" multi_edit="1">
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="caretaker"/>
+                <field name="amount"/>
+                <field name="aide_origin" options="{'no_create': True}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="aide_money_report_view_pivot" model="ir.ui.view">
+        <field name="name">aide.money.report.pivot</field>
+        <field name="model">aide.money</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Financial Aide Analysis" sample="1">
+                <field name="caretaker" type="col"/>
+                <field name="amount" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="aide_money_report_view_graph" model="ir.ui.view">
+        <field name="name">aide.money.report.graph</field>
+        <field name="model">aide.money</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <pivot string="Financial Aide Analysis" sample="1">
+                <field name="caretaker" type="col"/>
+                <field name="amount" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_aide_money" model="ir.actions.act_window">
+        <field name="name">Financial Assistance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.money</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'default_type': 'cash'}</field>
+        <field name="domain">[('type','=','cash')]</field>
+    </record>
+
+    <menuitem name="Aide Distribution" id="menu_aide_distribution" parent="menu_aide" sequence="15" />
+
+    <menuitem  id="menu_manage_aide_money" name="Cache Aide"  parent="menu_aide_distribution"
+               action="action_aide_money" sequence="5" />
+
+    <record id="action_aide_check" model="ir.actions.act_window">
+        <field name="name">Financial Assistance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.money</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'default_type': 'check'}</field>
+        <field name="domain">[('type','=','check')]</field>
+    </record>
+
+    <menuitem  id="menu_manage_aide_Cheque" name="Cheque Aide" parent="menu_aide_distribution"
+               action="action_aide_check" sequence="7" />
+
+
+    <record id="view_aide_purchase_form" model="ir.ui.view">
+        <field name="name">aide.purchase.form</field>
+        <field name="model">aide.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Aide for a purchase">
+                 <header>
+                   <button name="action_to_approve" states="draft"
+                            string="To Approve"
+                            class="btn-primary" type="object"/>
+
+                   <button name="action_disapproved" states="to_approve"
+                            string="Disapproved"
+                            class="btn-primary" type="object"/>
+
+                   <button name="action_approved"
+                            string="Approved" states="to_approve"
+                            class="btn-primary" type="object"/>
+
+                   <field name="state" widget="statusbar"/>
+               </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+
+                            <field name="caretaker"/>
+                            <field name="date"/>
+                            <!-- <field name="street"/>
+                            <field name="street2"/>
+                            <field name="city"/>
+                            <field name="state_id"/>
+                            <field name="country_id"/> -->
+                        </group>
+                        <group>
+                            <field name="type_of_purchase"/>
+
+                            <field name="amount"/>
+                            <field name="partner"/>
+                            <field name="company_id" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_aide_purchase_tree" model="ir.ui.view">
+        <field name="name">aide.purchase.tree</field>
+        <field name="model">aide.purchase</field>
+        <field name="arch" type="xml">
+            <tree string="Donation" multi_edit="1">
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="caretaker"/>
+                <field name="amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="aide_purchase_report_view_pivot" model="ir.ui.view">
+        <field name="name">aide.purchase.report.pivot</field>
+        <field name="model">aide.purchase</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Purchase Aide Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="caretaker" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="aide_purchase_report_view_graph" model="ir.ui.view">
+        <field name="name">aide.purchase.report.graph</field>
+        <field name="model">aide.purchase</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="Purchase Aide Analysis" sample="1">
+                <field name="date" interval="months" type="col"/>
+                <field name="amount" operator="+" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_aide_voucher_purchase" model="ir.actions.act_window">
+        <field name="name">Voucher for purchase</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.purchase</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'default_type': 'check'}</field>
+    </record>
+
+    <menuitem  id="menu_manage_aide_voucher_purchase" name="Voucher for Purchase" parent="menu_aide_distribution"
+               action="action_aide_voucher_purchase" sequence="8" />
+
+    <menuitem  id="menu_manage_aide_voucher_service" name="Voucher for Service" parent="menu_aide_distribution"
+               action="action_aide_money" sequence="9" />
+
+    <!--  >>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+    <record id="view_reception_inkind_form" model="ir.ui.view">
+        <field name="name">aide.reception.inkind.form</field>
+        <field name="model">aide.reception.inkind</field>
+        <field name="arch" type="xml">
+            <form string="Reception">
+                <header>
+                    <button name="action_received" states="draft" string="Confirm the reception"
+                            class="btn-primary" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                            <field name="specific_family" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                            <field name="is_company" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                             </group>
+                        <group>
+                            <field name="donor" domain="[('is_company', '=', is_company)]"
+                                   attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                            <field name="total_amount"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
+                                   force_save="1" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                            <!-- <field name="picking_type_id" domain="[('company_id', '=', company_id), ('code', '=', 'incoming')]"
+                                   attrs="{'readonly': [('state','not in', ('draft'))]}"/>-->
+                       </group>
+                    </group>
+                    <notebook>
+                        <page>
+                            <field name="aide_line" mode="tree">
+                                <tree  editable="bottom">
+                                    <field name="product_id" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                                    <field name="quantity" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                                    <field name="product_value" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                                    <field name="amount_value"/>
+                                    <field name="reception_id" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_reception_inkind_tree" model="ir.ui.view">
+        <field name="name">aide.reception.inkind.tree</field>
+        <field name="model">aide.reception.inkind</field>
+        <field name="arch" type="xml">
+            <tree string="In Kind">
+                    <field name="ref"/>
+                    <field name="state"/>
+                    <field name="donor"/>
+                    <field name="date"/>
+                    <field name="total_amount"/>
+                    <field name="specific_family"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="aide_reception_inkind_report_view_pivot" model="ir.ui.view">
+        <field name="name">aide.reception.inkind.report.pivot</field>
+        <field name="model">aide.reception.inkind</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Aide Reception Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="state" type="col"/>
+                <field name="total_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="aide_reception_inkind_report_view_graph" model="ir.ui.view">
+        <field name="name">aide.reception.inkind.report.graph</field>
+        <field name="model">aide.reception.inkind</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="Aide Reception Analysis" sample="1">
+                <field name="total_amount" operator="+" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_reception_inkind" model="ir.actions.act_window">
+        <field name="name">Reception Aide In-Kind</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.reception.inkind</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'default_is_company': True}</field>
+    </record>
+
+    <menuitem  id="menu_manage_reception_inkind" name="Aide In-Kind Reception" parent="menu_aide_reception"
+               action="action_reception_inkind" sequence="20" />
+
+    <!--
+        <record id="action_reception_inkind_from_person" model="ir.actions.act_window">
+        <field name="name">Reception Aide In-Kind</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.reception.inkind</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_is_company': False}</field>
+        </record>
+
+    <menuitem  id="menu_manage_reception_inkind_person" name="Aide In-Kind Reception from person" parent="menu_aide_reception"
+               action="action_reception_inkind_from_person" sequence="21" />
+    -->
+    <!--  service aide -->
+
+    <menuitem name="Aide Transfert" id="menu_aide_transfer" parent="menu_aide" sequence="15" />
+
+    <menuitem  id="menu_Money_Transfer" name="Money Transfert" parent="menu_aide_transfer"
+               action="action_aide_money" sequence="25" />
+
+    <!--  Configuration -->
+
+    <record id="view_money_label_form" model="ir.ui.view">
+        <field name="name">money.label.form</field>
+        <field name="model">money.label</field>
+        <field name="arch" type="xml">
+            <form string="Aide Intention">
+                <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_money_label_tree" model="ir.ui.view">
+        <field name="name">money.label.tree</field>
+        <field name="model">money.label</field>
+        <field name="arch" type="xml">
+            <tree string="Money aide intention" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_money_label" model="ir.actions.act_window">
+        <field name="name">Money aide intention</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">money.label</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem name="Configuration" id="menu_aide_configuration" parent="menu_aide" sequence="50" />
+
+    <menuitem  id="menu_manage_money_label" name="Aide Intention" parent="menu_aide_configuration"
+               action="action_money_label" sequence="10" />
+
+    <!--  Configuration 2-->
+
+    <record id="view_type_of_purchase_tree" model="ir.ui.view">
+        <field name="name">type.purchase.tree</field>
+        <field name="model">type.purchase</field>
+        <field name="arch" type="xml">
+            <tree string="Type of purchase" editable="top">
+                <field name="name"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_type_of_purchase" model="ir.actions.act_window">
+        <field name="name">Type of purchase</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">type.purchase</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem  id="menu_type_of_purchase" name="Type of purchase" parent="menu_aide_configuration"
+               action="action_type_of_purchase" sequence="20" />
+
+</odoo>

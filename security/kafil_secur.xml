@@ -1,0 +1,175 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="aide_services_money_comp_rule" model="ir.rule">
+        <field name="name">aide services money inkind multi-company</field>
+        <field name="model_id" ref="model_aide_services"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="aide_in_kind_comp_rule" model="ir.rule">
+        <field name="name">aide in_kind inkind multi-company</field>
+        <field name="model_id" ref="model_aide_in_kind"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="aide_reception_money_comp_rule" model="ir.rule">
+        <field name="name">aide reception money inkind multi-company</field>
+        <field name="model_id" ref="model_aide_reception_money"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="health_help_comp_rule" model="ir.rule">
+        <field name="name">health help inkind multi-company</field>
+        <field name="model_id" ref="model_health_help"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="health_mental_help_comp_rule" model="ir.rule">
+        <field name="name">health mental help inkind multi-company</field>
+        <field name="model_id" ref="model_health_mental_help"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="aide_money_comp_rule" model="ir.rule">
+        <field name="name">aide money inkind multi-company</field>
+        <field name="model_id" ref="model_aide_money"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="aide_purchase_comp_rule" model="ir.rule">
+        <field name="name">aide purchase inkind multi-company</field>
+        <field name="model_id" ref="model_aide_purchase"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="aide_reception_inkind_comp_rule" model="ir.rule">
+        <field name="name">aide reception inkind multi-company</field>
+        <field name="model_id" ref="model_aide_reception_inkind"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="money_box_comp_rule" model="ir.rule">
+        <field name="name">Money box multi-company</field>
+        <field name="model_id" ref="model_money_box"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="kafil_caretaker_comp_rule" model="ir.rule">
+        <field name="name">care taker multi-company</field>
+        <field name="model_id" ref="model_kafil_caretaker"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="kafil_orphan_comp_rule" model="ir.rule">
+        <field name="name">kafil orphan multi-company</field>
+        <field name="model_id" ref="model_kafil_orphan"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.module.category" id="module_category_kafil_el_yatim">
+        <field name="name">kafil el yatim</field>
+        <field name="description">Kafil El Yatim.</field>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="group_kafil_el_yatim_approver" model="res.groups">
+        <field name="name">Utilisateur niveau0</field>
+        <field name="category_id" ref="module_category_kafil_el_yatim"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_kafil_el_yatim_user" model="res.groups">
+        <field name="name">Utilisateur niveau1</field>
+        <field name="category_id" ref="module_category_kafil_el_yatim"/>
+        <field name="implied_ids" eval="[(4, ref('kafil.group_kafil_el_yatim_approver'))]"/>
+    </record>
+
+    <record id="group_kafil_el_yatim_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="module_category_kafil_el_yatim"/>
+        <field name="implied_ids" eval="[(4, ref('kafil.group_kafil_el_yatim_user'))]"/>
+        <!--<field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>-->
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('kafil.group_kafil_el_yatim_manager'))]"/>
+    </record>
+
+    <!--data noupdate="1">
+        
+        
+        <record id="ir_rule_kafil_el_yatim_manager" model="ir.rule">
+            <field name="name">Manager </field>
+            <field name="model_id" ref="model_kafil_assist"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('account.group_account_user')),
+                (4, ref('kafil.group_kafil_el_yatim_user'))]"/>
+        </record>
+
+        <record id="ir_rule_hr_expense_approver" model="ir.rule">
+            <field name="name">Team Approver Expense</field>
+            <field name="model_id" ref="model_kafil_assist"/>
+            <field name="domain_force">
+                ['|', '|', '|',
+                ('recipient_id.user_id', '=', user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id),
+                ('employee_id.parent_id.user_id', '=', user.id),
+                ('employee_id.expense_manager_id', '=', user.id)]
+                </field>
+            <field name="groups" eval="[(4, ref('kafil.group_hr_expense_team_approver'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_employee" model="ir.rule">
+            <field name="name">Employee Expense</field>
+            <field name="model_id" ref="model_kafil_assist"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="ir_rule_hr_expense_sheet_manager" model="ir.rule">
+            <field name="name">Manager Expense Sheet</field>
+            <field name="model_id" ref="model_kafil_assist_sheet"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('account.group_account_user')),
+                (4, ref('kafil.group_hr_expense_user'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_sheet_approver" model="ir.rule">
+            <field name="name">Approver Expense Sheet</field>
+            <field name="model_id" ref="model_kafil_assist_sheet"/>
+            <field name="domain_force">['|', '|', '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id),
+                ('employee_id.parent_id.user_id', '=', user.id),
+                ('employee_id.expense_manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('kafil.group_hr_expense_team_approver'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_sheet_employee" model="ir.rule">
+            <field name="name">Employee Expense Sheet</field>
+            <field name="model_id" ref="model_kafil_assist_sheet"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="hr_expense_comp_rule" model="ir.rule">
+            <field name="name">Expense multi company rule</field>
+            <field name="model_id" ref="model_kafil_assist"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="hr_expense_report_comp_rule" model="ir.rule">
+            <field name="name">Expense Report multi company rule</field>
+            <field name="model_id" ref="model_kafil_assist_sheet"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="hr_expense_team_approver_account_move_line_rule" model="ir.rule">
+            <field name="name">Expense Team Approver Account Move Line</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="domain_force">[('expense_id', '!=', False)]</field>
+            <field name="groups" eval="[(4, ref('kafil.group_hr_expense_team_approver'))]"/>
+        </record>
+        
+    </data-->
+</odoo>

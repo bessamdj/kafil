@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  A5 paper format  -->
+	<record id="a5" model="report.paperformat">
+        <field name="name">A5</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">210</field>
+        <field name="page_width">137</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">30</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">25</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Distribution of financial donation  -->
+
+    <report
+            id="report_distrib"
+            string="Financial Assistance"
+            model="aide.money"
+            report_type="qweb-pdf"
+            name="kafil.report_distribution"
+            file="kafil.report_distribution"
+            paperformat="kafil.a5"
+            print_report_name="'Distribution'"
+    />
+
+
+    <template id="report_distribution">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-if="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id"/>
+                </t>
+                <t t-if="not o or not 'company_id' in o">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_distribution_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_distribution_doc">
+        <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                    <div class="page" >
+                        <br/>
+
+                    <span t-field="o.date"/>    <span t-field="o.ref"/>
+                        <h2 style="font: italic bold 24px Arial; text-align:center">
+
+                            <span></span>
+                        </h2>
+                        <br/><br/>
+                        أنا الممضي أسفله السيد)ة(<span t-field="o.caretaker"/>
+                        المولودة بتاريخ :
+                        <div id="informations" class="row mt32 mb32" style="font: italic bold 18px Arial; line-height: 1.8em;">
+                            Name :
+                            <br/>
+                            <t t-if="o.amount">
+                                For the amount of <span t-field="o.amount"/> <t t-if="o.amount"></t>
+                                <br/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <span style="text-align:center;">
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.ref, 600, 100)"
+                                 style="width:350px;height:60px;"/>
+                        </span>
+                    </div>
+                </t>
+            </t>
+    </template>
+
+        <!-- Distribution of services
+
+    <report
+            id="report_distrib_serv"
+            string="Aide Distribution"
+            model="aide.money"
+            report_type="qweb-pdf"
+            name="kafil.report_distribution_services"
+            file="kafil.report_distribution_services"
+            paperformat="kafil.a5"
+            print_report_name="'Distribution of services'"
+    />
+
+
+    <template id="report_distribution_services">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-if="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id"/>
+                </t>
+                <t t-if="not o or not 'company_id' in o">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_distribution_services_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_distribution_services_doc">
+        <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                    <div class="page" >
+                        <br/>
+                        <h2 style="font: italic bold 24px Arial; text-align:center">
+                            <span>Aide Distribution</span><span t-field="o.ref"/>At:<span t-field="o.date"/>
+                            <t t-esc="company.partner_id.lang"/>
+                        </h2>
+                        <br/><br/>
+                        <div id="informations" class="row mt32 mb32" style="font: italic bold 18px Arial; line-height: 1.8em;">
+                            Name : <span t-field="o.caretaker"/>
+                            <br/>
+                            <t t-if="o.amount">
+                                For the amount of <span t-field="o.amount"/> <t t-if="o.amount"></t>
+                                <br/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <span style="text-align:center;">
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.ref, 600, 100)"
+                                 style="width:350px;height:60px;"/>
+                        </span>
+                    </div>
+                </t>
+            </t>
+    </template> -->
+
+</odoo>

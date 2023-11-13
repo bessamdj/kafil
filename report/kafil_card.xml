@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="card" model="report.paperformat">
+        <field name="name">Card</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">86</field>
+        <field name="page_width">54</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">1</field>
+        <field name="margin_bottom">1</field>
+        <field name="margin_left">1</field>
+        <field name="margin_right">1</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+        <report
+        id="caretaker_card"
+        model="kafil.caretaker"
+        string="Carde"
+        report_type="qweb-pdf"
+        name="kafil.report_caretaker_card"
+        file="kafil.report_caretaker_card"
+        paperformat="kafil.card"
+        print_report_name="'Carde- %s' % (object.name)"
+        />
+        
+	    <template id="report_caretaker_card">
+            <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-foreach="docs" t-as="kafil">
+					<t t-if="o and 'company_id' in o">
+							<t t-set="company" t-value="o.company_id"/>
+                    </t>
+					<t t-if="not o or not 'company_id' in o">
+							<t t-set="company" t-value="res_company"/>
+                    </t>
+
+                    <table class="table-borderless" style="width:320pt; height:155pt; border-collapse:separate;
+                        				border-radius:8pt; margin:5pt; margin-left:-10pt">
+                            <td style="width:33%;" valign="center">
+                                <table style="width:77pt; ">
+                                    <tr style="height:30%">
+                                        <td align="center" valign="center">
+       										<img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+												 style="max-height:45pt;max-width:90%" alt="Company Logo"/>
+                                        </td>
+                                    </tr>
+                                    <tr style="height:70%; " >
+                                        <td align="center" >
+
+                                            <img t-if="kafil.image" t-att-src="image_data_uri(kafil.image)"
+												 style="max-height:85pt;max-width:90%;padding-top:13pt" alt="Kafil Image"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width:67%" valign="center">
+                                <table style="width:100%; ">
+									<tr style="height:30%">
+                                        <td align="center" valign="center">
+                                            <t t-if="company.report_header">
+                                                <span t-esc="company.report_header"/>
+                                            </t>
+                                            <t t-if="company.name">
+                                                <span t-esc="company.name"/>
+                                                <br/>
+                                            </t>
+                                            <t t-if="company.phone">
+                                            <span t-esc="company.phone"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td style="font-size:15pt;" align="center">
+
+                                            <t t-if="kafil.surname">
+                                                <t t-esc="kafil.surname"/>
+                                            </t>
+                                            <t t-esc="kafil.name"/>
+                                        </td>
+                                    </tr>
+									<tr>
+                                        <td align="center">
+                                            <img alt="barcode" t-att-src="'/report/barcode/QR/%s' % kafil.ref" style="padding-top:5pt;width:50pt;height:50pt;" />
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><br/>
+                                            <div align="center" style="font-size:10pt;margin-bottom:-30pt;"> <span t-esc="company.city or ''"/> le: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </table>
+                </t>
+            </div>
+        </t>
+	    </template>
+    </data>
+
+</odoo>

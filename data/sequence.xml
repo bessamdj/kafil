@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+
+        <record id="seq_kafil_caretaker" model="ir.sequence">
+            <field name="name">CareTaker Sequence</field>
+            <field name="code">kafil.caretaker.sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">CT</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_kafil_orphan" model="ir.sequence">
+            <field name="name">Orphan Sequence</field>
+            <field name="code">kafil.orphan.sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">OR</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+
+        <record id="seq_mone_box" model="ir.sequence">
+            <field name="name">Money Box Sequence</field>
+            <field name="code">money.box</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">MB</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+        <record id="seq_money_reception" model="ir.sequence">
+            <field name="name">Money Reception Sequence</field>
+            <field name="code">money.reception</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">MR</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+        <record id="seq_reception_inkind" model="ir.sequence">
+            <field name="name">Aide Reception In-kind Sequence</field>
+            <field name="code">reception.inkind</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">ARI</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+        <record id="seq_money_distribution" model="ir.sequence">
+            <field name="name">Money Distribution Sequence</field>
+            <field name="code">money.distribution</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">MD</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+        <record id="seq_distribution_inkind" model="ir.sequence">
+            <field name="name">In-kind Aides Sequence</field>
+            <field name="code">aides.inkind</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">ADI</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_aide_services" model="ir.sequence">
+            <field name="name">Aide services sequence</field>
+            <field name="code">aide.services</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">AS</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+        <record id="seq_aide_purchase" model="ir.sequence">
+            <field name="name">Aide purchase sequence</field>
+            <field name="code">aide.purchase</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">AS</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+        <record id="seq_aide_medical" model="ir.sequence">
+            <field name="name">Medical Help sequence</field>
+            <field name="code">medical.help</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">MH</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+        <record id="seq_aide_mental" model="ir.sequence">
+            <field name="name">Mental Help sequence</field>
+            <field name="code">mental.help</field>
+            <field name="implementation">no_gap</field>
+            <field name="prefix">MHH</field>
+            <field name="padding">5</field>
+            <field name="suffix">/%(y)s</field>
+            <field name="company_id"  eval="False"/>
+        </record>
+
+    </data>
+</odoo>

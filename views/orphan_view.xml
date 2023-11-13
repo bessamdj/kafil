@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_kafil_orphan_tree" model="ir.ui.view">
+        <field name="name">kafil.orphan.tree</field>
+        <field name="model">kafil.orphan</field>
+        <field name="arch" type="xml">
+            <tree string="Orphan">
+                <field name="name"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_kafil_orphan_form" model="ir.ui.view">
+        <field name="name">kafil.orphan.form</field>
+        <field name="model">kafil.orphan</field>
+        <field name="arch" type="xml">
+            <form string="Job">
+                <header>
+
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Orphan Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="caretaker"/>
+                            <field name="date_birth"/>
+                            <field name="email"/>
+                            <field name="active" invisible="1"/>
+                            <field name="school_year" attrs="{'invisible': [('dropout_graduate', '=', True)]}"/>
+                            <field name="dropout_graduate"/>
+                        </group>
+                        <group>
+                            <field name="gender"/>
+                            <field name="age"/>
+                            <field name="phone"/>
+                            <field name="whatsapp"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="School registry">
+                            <field name="years_line" mode="tree,kanban">
+                                <tree string="Field Mappings" editable="bottom">
+                                    <field name="order" options="{'no_create': True}"/>
+                                    <field name="year" options="{'no_create': True}"/>
+                                    <field name="first"  string="First Trimester"/>
+                                    <field name="second" string="Second Trimester"/>
+                                    <field name="third" string="Third Trimester"/>
+                                    <field name="difficult_classes" widget="many2many_tags"/>
+                                    <field name="help_needed"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Education">
+                            <field name="education" mode="tree,kanban">
+                                <tree string="Field Mappings" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="type"/>
+                                    <field name="academic"/>
+                                    <field name="professional"/>
+                                    <field name="degree"/>
+                                    <field name="speciality"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Physical Health">
+                            <field name="physical_h" mode="tree,kanban">
+                                <tree string="Physical" editable="bottom">
+                                    <field name="good"/>
+                                    <field name="category"/>
+                                    <field name="type" options="{'no_create': True}"/>
+                                    <field name="follow"/>
+                                    <field name="medic_needs"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Mental Health">
+                            <field name="mental_h" mode="tree,kanban">
+                                <tree string="Mental" editable="bottom">
+                                    <field name="is_good"/>
+                                    <field name="disorder" options="{'no_create': True}"/>
+                                    <field name="reason"/>
+                                    <field name="mood"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="kafil_orphan_report_view_pivot" model="ir.ui.view">
+        <field name="name">kafil.orphan.report.pivot</field>
+        <field name="model">kafil.orphan</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Orphan Analysis" sample="1">
+                <field name="caretaker" invisible="1"/>
+                <field name="gender" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="kafil_orphan_report_view_graph" model="ir.ui.view">
+        <field name="name">kafil.orphan.report.graph</field>
+        <field name="model">kafil.orphan</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="Orphan Analysis" sample="1">
+                <field name="age" type="col"/>
+                <field name="gender" type="row"/>
+            </graph>
+        </field>
+    </record>
+<record id="action_kafil_orphan" model="ir.actions.act_window">
+        <field name="name">Ophans</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">kafil.orphan</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create First Orphan !
+          </p>
+        </field>
+    </record>
+
+    <menuitem  id="menu_manage_orphan"     name="Ophans"  parent="menu_assist"   action="action_kafil_orphan" sequence="20" />
+
+</odoo>
+

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  donation in money  -->
+    <report
+            id="report_donation_link"
+            string="Donation"
+            model="aide.reception.money"
+            report_type="qweb-html"
+            name="kafil.report_donation"
+            file="kafil.report_donation"
+            paperformat="kafil.a5"
+            print_report_name="'Donation'"
+    />
+
+
+    <template id="report_donation">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                        <t t-if="o and 'company_id' in o">
+                            <t t-set="company" t-value="o.company_id"/>
+                        </t>
+                        <t t-if="not o or not 'company_id' in o">
+                            <t t-set="company" t-value="res_company"/>
+                        </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_donation_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_donation_doc">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <div class="page" style="line-height: 1.5em; font: italic 18px Arial">
+                    Ref: <span t-field="o.ref"/>
+                    <div style="text-align:center">
+                        <br/>
+                        <h2 >
+                            <span>A receipt slip </span>
+                        </h2>
+                        <h3 >
+                            <span>Cash donation</span>
+                        </h3>
+                    </div>
+                    <br/>
+                    <p style="font: bold 18px Arial; text-indent: 30px; line-height: 1.8em;">
+                    I, the treasurer of the association <span t-esc="company.name"/>, in the day of <span t-field="o.date"/>
+                    I acknowledge that I received the amount : <span t-field="o.amount"/>, from:<br/>
+                    <t t-if="o.donor">
+                        Mr/Mmme : <span t-field="o.donor"/>
+                    </t><br/>
+                    <t t-if="o.type=='cash'">
+                        in cash
+                    </t>
+                    <t t-else="">
+                        in check, that has the number <span t-field="o.number"/>
+                    </t>
+.
+                    <br/>
+                    <br/>
+                    <br/>
+                    I ask Allah to bless you, and your loved one.
+                    </p>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div style="text-align:right">
+                    The treasurer.
+                        </div>
+
+
+                </div>
+                <div style="text-align:center;position: relative;">
+                    <img t-att-src="'/report/barcode/Code128/%s' % o.ref" style="position: absolute;left:110px;align:center;bottom: -70px;width:250px;height:40px;"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--  donation in kind  -->
+
+    <report
+            id="report_donation_goods_link"
+            string="Donation"
+            model="aide.reception.inkind"
+            report_type="qweb-pdf"
+            name="kafil.report_donation_goods"
+            file="kafil.report_donation_goods"
+            paperformat="kafil.a5"
+            print_report_name="'Donation'"
+    />
+
+
+    <template id="report_donation_goods">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                        <t t-if="doc and 'company_id' in doc">
+                            <t t-set="company" t-value="doc.company_id"/>
+                        </t>
+                        <t t-if="not doc or not 'company_id' in doc">
+                            <t t-set="company" t-value="res_company"/>
+                        </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_donation_goods_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_donation_goods_doc">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="doc" t-value="doc.with_context(lang=lang)"/>
+                <div class="page" style="line-height: 1.5em; font: italic 18px Arial">
+                    Ref: <span t-field="doc.ref"/>
+                    <div style="text-align:center">
+                        <br/>
+                        <h2 >
+                            <span>A receipt slip </span>
+                        </h2>
+                        <h3 >
+                            <span>In kind donation</span>
+                        </h3>
+                    </div>
+                    <br/>
+                    <p style="font: bold 18px Arial; text-indent: 30px; line-height: 1.8em;">
+                    I, the treasurer of the association <span t-esc="company.name"/>, in the day of <span t-field="doc.date"/>
+                    I acknowledge that I received the product(s) listed below, from:<br/>
+                    <t t-if="doc.donor">
+                        Mr/Mmme : <span t-field="doc.donor"/>
+                    </t><br/>
+                    <table class="table table-sm">
+                        <thead class="bg-100">
+                            <tr>
+                                <th>Products</th>
+                                <th class="text-right">Quantity</th>
+                                <!-- <th class="text-right">Product Value</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-foreach="doc.aide_line" t-as="al">
+                          <tr>
+                              <td>
+                                  <span t-field="al.product_id"/>
+                              </td>
+                              <td class="text-right">
+                                  <span t-esc="al.quantity"  t-options="{'widget': 'float', 'precision': 2}"/>
+                                  <!-- t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/> -->
+                              </td>
+                              <!--
+                              <td class="text-right">
+                                  <span t-field="al.product_value"  t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                              </td>
+                              -->
+                          </tr>
+                        </t>
+                      </tbody>
+                    </table>
+.
+                    <br/>
+                    <br/>
+                    <br/>
+                    I ask Allah to bless you, and your loved one.
+                    </p>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div style="text-align:right">
+                    The treasurer.
+                        </div>
+                </div>
+                <div style="text-align:center;position: relative;">
+                        <img t-att-src="'/report/barcode/Code128/%s' % doc.ref" style="position: absolute;left:110px;align:center;bottom: -70px;width:250px;height:40px;"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--  Help in purchase  -->
+
+    <report
+            id="report_aide_purchase_link"
+            string="Aide in purchases"
+            model="aide.purchase"
+            report_type="qweb-pdf"
+            name="kafil.report_aide_purchase"
+            file="kafil.report_aide_purchase"
+            paperformat="kafil.a5"
+            print_report_name="'Aide in purchases'"
+    />
+
+
+    <template id="report_aide_purchase">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                        <t t-if="doc and 'company_id' in doc">
+                            <t t-set="company" t-value="doc.company_id"/>
+                        </t>
+                        <t t-if="not doc or not 'company_id' in doc">
+                            <t t-set="company" t-value="res_company"/>
+                        </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_aide_purchase_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_aide_purchase_doc">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="doc" t-value="doc.with_context(lang=lang)"/>
+                <div class="page" style="line-height: 1.5em; font: italic 18px Arial">
+                    Ref: <span t-field="doc.ref"/><div style="text-align:right">date: <span t-field="doc.date"/></div>
+                    <div style="text-align:center">
+                        <br/>
+                        <h2 >
+                            <span>Purchase voucher</span>
+                        </h2>
+
+                    </div>
+                    <br/>
+
+                    <p style="font: bold 18px Arial; text-indent: 30px; line-height: 1.8em;">
+                    I, the treasurer of the association <span t-esc="company.name"/>, ask the director of :
+                    <t t-if="doc.partner">
+                        Mr/Mme : <span t-field="doc.partner"/>
+                    </t><br/>
+                        To give in return of this voucher <span t-field="doc.type_of_purchase"/>
+                    For a maximum amount of : <span t-field="doc.amount"/>
+
+                    </p>
+
+                    <br/>
+                    <div style="text-align:right">
+                    The treasurer.
+                        </div>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <div style="text-align:center;position: relative;">
+                        <img t-att-src="'/report/barcode/Code128/%s' % doc.ref" style="position: absolute;left:110px;align:center;bottom: -70px;width:250px;height:40px;"/>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

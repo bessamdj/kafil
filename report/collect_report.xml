@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Money Box  -->
+    <report
+            id="report_money_box_link"
+            string="Money Box"
+            model="money.box"
+            report_type="qweb-pdf"
+            name="kafil.report_money_box"
+            file="kafil.report_money_box"
+            paperformat="kafil.a5"
+            print_report_name="'Money Box'"
+    />
+
+    <template id="report_money_box">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-if="o and 'company_id' in o">
+                    <t t-set="company" t-value="o.company_id"/>
+                </t>
+                <t t-if="not o or not 'company_id' in o">
+                    <t t-set="company" t-value="res_company"/>
+                </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_money_box_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_money_box_doc">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <div class="page" style="line-height: 1.5em; font: italic 18px Arial">
+                    <br/>
+                    <h2 style="font: italic bold 24px Arial; text-align:center">
+                        <span>Counting the collect box</span>
+                    </h2>
+                    Ref: <span t-field="o.ref"/>
+                    <br/>
+
+                    In the day of <span t-field="o.date"/>
+                    The donation box was opened to account for the money,
+                    and this was in the presence of the following gentlemen:
+                     <table style="width:500px; border: 1pt solid black; border-collapse:separate; border-radius:8pt; margin:10pt auto;">
+                        <t t-foreach="o.presente" t-as="l">
+                            <td style="width:45%;padding:15px 20px 10px 20px;" valign="center">
+                                <t>Mr/Mme:</t>
+                                <t>
+                                    <span t-field="l.name"/>
+                                </t>
+                            </td>
+                            <td style="width:55%;padding:15px 20px 10px 20px;" valign="center">
+							    <t>Function:</t>
+                                <t>
+                                    <span t-field="l.function"/>
+                                </t>
+                            </td>
+                        </t>
+                    </table>
+                    <br/>
+                    And the result was:
+                    <table style="width:500px;margin:10px auto;background:white;border:1px solid #e1e1e1;">
+                        <thead>
+                            <tr>
+                                <th>Designation</th>
+                                <th width="35%" class="text-center">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.amount_line" t-as="al">
+                                <td style="padding:15px 20px 10px 20px;">
+                                    <span t-field="al.designation"/>
+                                </td>
+                                <td style="padding:15px 20px 10px 20px; text-align:right">
+                                    <span t-field="al.amount" widget="monetary" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfooter>
+                            <td style="padding:15px 20px 10px 20px;">
+                                Total
+                            </td>
+                            <td style="padding:15px 20px 10px 20px; text-align:right">
+                                <span t-field="o.total" widget="monetary" t-options='{"widget": "float", "decimal_precision": "Product Price"}'/>
+                            </td>
+                        </tfooter>
+                    </table>
+
+                    <br/><br/>
+                    I handed over this money to the Treasurer to deposit it in the association's bank account.
+  The counting were closed on the same day, month and year mentioned above.
+                </div>
+                <div style="text-align:center;position: relative;">
+                        <img t-att-src="'/report/barcode/Code128/%s' % o.ref" style="position: absolute;left:110px;align:center;bottom: -70px;width:250px;height:40px;"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_association_management" name="Association Management" sequence="25" web_icon="kafil,static/description/icon1.png"/>
+    <menuitem id="menu_members" name="Members" parent="menu_association_management" action="action_members" sequence="10" />
+    <menuitem id="menu_subscriptions"  name="Subscriptions"    parent="menu_association_management"   action="action_subscriptions" sequence="15" />
+
+</odoo>

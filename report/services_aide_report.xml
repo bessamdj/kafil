@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Service Aide  -->
+    <report
+            id="report_services_aide_link"
+            string="Service Aide"
+            model="aide.services"
+            report_type="qweb-pdf"
+            name="kafil.report_services_aide"
+            file="kafil.report_services_aide"
+            paperformat="kafil.a5"
+            print_report_name="'Services Aide'"
+    />
+
+
+    <template id="report_services_aide">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                        <t t-if="o and 'company_id' in o">
+                            <t t-set="company" t-value="o.company_id"/>
+                        </t>
+                        <t t-if="not o or not 'company_id' in o">
+                            <t t-set="company" t-value="res_company"/>
+                        </t>
+                <t t-set="lang" t-value="company.partner_id.lang"/>
+                <t t-call="kafil.report_services_aide_doc" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_services_aide_doc">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <div class="page" >
+                    <br/>
+                    <h2 style="font: italic bold 24px Arial; text-align:center">
+                        <span>Service aide Ref</span><span t-field="o.ref"/>at:<span t-field="o.date"/>
+                    </h2>
+                    <span t-field="o.caretaker"/>
+                    <span t-field="o.date"/>
+                    <span t-field="o.type_of_services"/>
+
+                    <span t-field="o.amount"/>
+                    <span t-field="o.partner"/>
+                    <br/><br/>
+                </div>
+                <div class="footer">
+                    <span style="text-align:center;">
+                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.ref, 600, 100)"
+                             style="width:350px;height:60px;"/>
+                    </span>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

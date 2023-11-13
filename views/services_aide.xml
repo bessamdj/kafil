@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_aide_services_form" model="ir.ui.view">
+        <field name="name">aide.services.form</field>
+        <field name="model">aide.services</field>
+        <field name="arch" type="xml">
+            <form string="Aide for a services">
+                 <header>
+                   <button name="action_to_approve" states="draft"
+                            string="To Approve"
+                            class="btn-primary" type="object"/>
+
+                   <button name="action_disapproved" states="to_approve"
+                            string="Disapproved"
+                            class="btn-primary" type="object"/>
+
+                   <button name="action_approved"
+                            string="Approved" states="to_approve"
+                            class="btn-primary" type="object"/>
+
+                   <field name="state" widget="statusbar"/>
+               </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title">
+                        <h1><field name="ref"/> </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="caretaker"/>
+                            <field name="date"/>
+                            <!-- <field name="street"/>
+                            <field name="street2"/>
+                            <field name="city"/>
+                            <field name="state_id"/>
+                            <field name="country_id"/> -->
+                        </group>
+                        <group>
+                            <field name="type_of_services"/>
+
+                            <field name="amount"/>
+                            <field name="partner"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1" attrs="{'readonly': [('state','not in', ('draft'))]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_aide_services_tree" model="ir.ui.view">
+        <field name="name">aide.services.tree</field>
+        <field name="model">aide.services</field>
+        <field name="arch" type="xml">
+            <tree string="Donation" multi_edit="1">
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="caretaker"/>
+                <field name="amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="aide_services_report_view_pivot" model="ir.ui.view">
+        <field name="name">aide.services.report.pivot</field>
+        <field name="model">aide.services</field>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <pivot string="Mental help Analysis" sample="1">
+                <field name="date" interval="month" type="row"/>
+                <field name="caretaker" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="aide_services_report_view_graph" model="ir.ui.view">
+        <field name="name">aide.services.report.graph</field>
+        <field name="model">aide.services</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <graph string="Mental help Analysis" sample="1">
+                <field name="date" interval="months" type="col"/>
+                <field name="amount" operator="+" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_aide_voucher_services" model="ir.actions.act_window">
+        <field name="name">Voucher for services</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aide.services</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'default_type': 'check'}</field>
+    </record>
+
+    <menuitem  id="menu_manage_aide_voucher_service" name="Voucher for Service" parent="menu_aide_distribution"
+               action="action_aide_voucher_services" sequence="9" />
+
+<!--  Configuration 3-->
+
+    <record id="view_type_of_service_tree" model="ir.ui.view">
+        <field name="name">type.services.tree</field>
+        <field name="model">type.services</field>
+        <field name="arch" type="xml">
+            <tree string="Type of service" editable="top" create="1" delete="1" multi_edit="1" >
+                <field name="name"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_type_of_service" model="ir.actions.act_window">
+        <field name="name">Type of service</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">type.services</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem  id="menu_type_of_service" name="Type of service" parent="menu_aide_configuration"
+               action="action_type_of_service" sequence="30" />
+
+    <!--  Configuration 4    -->
+
+
+</odoo>
